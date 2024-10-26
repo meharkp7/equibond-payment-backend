@@ -4,6 +4,10 @@ const cors = require('cors');
 const helmet = require('helmet');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+require('dotenv').config();
+
+const app = express();
 
 // Initialize environment variables
 dotenv.config();
@@ -16,11 +20,12 @@ const app = express();
 // Middleware
 app.use(helmet());
 app.use(bodyParser.json());
-app.use(cors({ origin: process.env.CLIENT_ORIGIN }));
+app.use(cors());
+app.use(express.json());
 
 // Routes
-app.use('/api/customers', customerRoutes);
-app.use('/api/charges', chargeRoutes);
+app.use('/api/customers/create', customerRoutes);
+app.use('/api/charges/create', chargeRoutes);
 
 // Health check route
 app.get('/', (req, res) => {
